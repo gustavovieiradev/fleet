@@ -4,6 +4,13 @@ import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/
 import theme from './src/theme';
 import { Loading } from './src/components/Loading';
 import { StatusBar } from 'react-native';
+import { AppProvider, UserProvider } from '@realm/react';
+
+import {REALM_APP_ID} from '@env';
+import { Home } from './src/screens/Home';
+import { Route } from './src/routes';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
 
@@ -16,9 +23,15 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <StatusBar barStyle={"light-content"} backgroundColor="transparent" translucent />
-      <SignIn />
-    </ThemeProvider>
+    <AppProvider id={REALM_APP_ID}>
+      <ThemeProvider theme={theme}>
+        <SafeAreaProvider>
+          <StatusBar barStyle={"light-content"} backgroundColor="transparent" translucent />
+          <UserProvider fallback={SignIn}>
+            <Route />
+          </UserProvider>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </AppProvider>
   );
 }
